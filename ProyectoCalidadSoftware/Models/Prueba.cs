@@ -6,6 +6,8 @@
         public string Nombre { get; set; }
         public int Puntaje { get; set; }
 
+        public string ContenidoImpresion { get; set; }
+
         public DateTime Fecha { get; set; }
 
         // Referencia al software que se evalúa

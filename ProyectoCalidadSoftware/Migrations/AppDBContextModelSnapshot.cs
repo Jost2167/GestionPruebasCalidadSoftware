@@ -112,6 +112,9 @@ namespace ProyectoCalidadSoftware.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ContenidoImpresion")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("CriterioId")
                         .HasColumnType("int");
 
