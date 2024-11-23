@@ -1,0 +1,58 @@
+﻿@model Dictionary<string, int> // Usado para enviar respuestas al controlador
+
+@{
+    ViewBag.Title = "Crear Prueba";
+    var software = ViewBag.Software;
+    var criterios = ViewBag.Criterios as List<ProyectoCalidadSoftware.Models.Criterio>;
+}
+
+<h2>Crear Prueba para @software.Nombre</h2>
+
+<form asp-action="CrearPrueba" method="post">
+    <input type="hidden" name="softwareId" value="@software.Id" />
+
+    <div>
+        <label for="nombrePrueba">Nombre de la prueba</label>
+        <input type="text" id="nombrePrueba" name="nombrePrueba" required />
+    </div>
+
+    <div>
+        <h3>Criterios y Preguntas</h3>
+
+        @foreach (var criterio in criterios)
+        {
+            <div>
+                <h4>@criterio.Nombre</h4>
+                <p>@criterio.Descripcion</p>
+
+                @foreach (var pregunta in criterio.Preguntas)
+                {
+                    <div>
+                        <label>@pregunta.Texto</label>
+                        <div>
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <label>
+                                    <input type="radio"
+                                           name="respuestas[@(criterio.Id)_@(pregunta.Id)]"
+                                           value="@i"
+                                           required /> @i
+                                </label>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar Prueba</button>
+</form>
+
+<!-- Botón para imprimir -->
+<button id="btnImprimir" class="btn btn-secondary mt-3">Imprimir Prueba</button>
+
+<script>
+    document.getElementById('btnImprimir').onclick = function () {
+        window.print();
+    };
+</script>

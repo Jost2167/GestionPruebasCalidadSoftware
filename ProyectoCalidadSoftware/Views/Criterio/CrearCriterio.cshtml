@@ -1,0 +1,98 @@
+﻿@model ProyectoCalidadSoftware.Models.Criterio
+
+<h2 class="text-left">CRITERIO Y PREGUNTAS</h2>
+<form method="post" asp-controller="Criterio" asp-action="CrearCriterio">
+    <div class="container mt-4">
+        <!-- Campo Nombre del Criterio -->
+        <div class="form-group">
+            <label for="criterioNombre" class="font-weight-bold mb-2">Criterio a evaluar</label>
+            <input type="text" id="criterioNombre" name="Nombre" required class="form-control" placeholder="Ingrese el nombre del criterio" />
+        </div>
+
+        <!-- Campo de Descripción del Criterio -->
+        <div class="form-group my-2">
+            <label for="criterioDescripcion" class="font-weight-bold mb-2">Descripción del criterio</label>
+            <textarea id="criterioDescripcion" name="Descripcion" rows="2" class="form-control" placeholder="Ingrese una breve descripción del criterio"></textarea>
+        </div>
+
+        <!-- Línea separadora -->
+        <hr class="my-4" />
+
+        <label for="criterioNombre" class="font-weight-bold">Preguntas</label>
+
+        <!-- Contenedor de Preguntas -->
+        <div id="preguntas" class="mt-2">
+            <div class="form-group pregunta mb-3">
+                <div class="d-flex justify-content-between align-items-center gap-4">
+                    <div class="flex-grow-1">
+                        <input type="text" name="Preguntas[0].Texto" class="form-control" required placeholder="Ingrese la pregunta" />
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <button type="button" class="btn btn-danger eliminar-pregunta">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Línea separadora después de la primera pregunta -->
+        <hr class="my-4" />
+
+        <div class="d-flex justify-content-between mt-4">
+            <button type="button" id="agregarPregunta" class="btn btn-primary">Agregar pregunta</button>
+            <button type="submit" class="btn btn-success">Guardar</button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        // Función para actualizar los índices de los campos de preguntas
+        function actualizarIndices() {
+            const preguntas = document.querySelectorAll(".pregunta");
+            preguntas.forEach((pregunta, index) => {
+                pregunta.querySelector("input[name$='.Texto']").setAttribute("name", `Preguntas[${index}].Texto`);
+            });
+        }
+
+        // Función para generar una nueva pregunta
+        function generarNuevaPregunta() {
+            const primeraPregunta = document.querySelector(".pregunta");
+            const nuevaPregunta = primeraPregunta.cloneNode(true);
+
+            // Limpiar valores de entrada en el nuevo formulario
+            nuevaPregunta.querySelector("input[name$='.Texto']").value = "";
+
+            return nuevaPregunta;
+        }
+
+        // Eliminar pregunta específica
+        document.getElementById("preguntas").addEventListener("click", function (event) {
+            if (event.target.classList.contains("eliminar-pregunta")) {
+                const preguntasActuales = document.querySelectorAll(".pregunta");
+                if (preguntasActuales.length > 1) {
+                    event.target.closest(".pregunta").remove();
+                    actualizarIndices();
+                }
+            }
+        });
+
+        // Agregar nueva pregunta manualmente
+        document.getElementById("agregarPregunta").addEventListener("click", function () {
+            const contenedorPreguntas = document.getElementById("preguntas");
+            contenedorPreguntas.appendChild(generarNuevaPregunta());
+            actualizarIndices();
+        });
+
+        // Contar la cantidad de preguntas y agregarla al modelo al enviar el formulario
+        document.querySelector("form").addEventListener("submit", function (event) {
+            const cantidadPreguntas = document.querySelectorAll(".pregunta").length;
+            const inputCantidadPreguntas = document.createElement("input");
+            inputCantidadPreguntas.type = "hidden";
+            inputCantidadPreguntas.name = "CantidadPreguntas";
+            inputCantidadPreguntas.value = cantidadPreguntas;
+
+            // Agregar el campo oculto al formulario antes de enviarlo
+            this.appendChild(inputCantidadPreguntas);
+        });
+    </script>
+}

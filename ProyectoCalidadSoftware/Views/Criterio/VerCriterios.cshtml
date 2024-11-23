@@ -1,0 +1,94 @@
+﻿@model List<ProyectoCalidadSoftware.Models.Criterio>
+
+<h2 class="text-left">CRITERIOS</h2>
+
+<table class="table table-bordered table-striped mt-4">
+    <thead class="table-dark">
+        <tr>
+            <th>Criterio</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var criterio in Model)
+        {
+            <tr>
+                <td>@criterio.Nombre</td>
+                <td>@criterio.Descripcion</td>
+                <td>
+                    <!-- Botón para ver preguntas del criterio -->
+                    <a href="@Url.Action("VerPreguntas", "Pregunta", new { criterioId = criterio.Id })" class="btn btn-primary">Preguntas</a>
+
+                    <!-- Botón para editar el criterio -->
+                    <button class="btn btn-warning" onclick="abrirModalEditar(@criterio.Id, '@criterio.Nombre', '@criterio.Descripcion')">Editar</button>
+
+                    <!-- Botón para eliminar criterio -->
+                    <a href="@Url.Action("EliminarCriterio", "Criterio", new { id = criterio.Id })" class="btn btn-danger">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Botón para crear un nuevo criterio -->
+<a href="@Url.Action("CrearCriterio", "Criterio")" class="btn btn-success">Agregar criterio</a>
+
+<!-- Modal para editar nombre y descripción del criterio -->
+<div class="modal fade" id="modalEditarCriterio" tabindex="-1" aria-labelledby="modalEditarCriterioLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditarCriterioLabel">Editar Criterio</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" asp-controller="Criterio" asp-action="EditarCriterio">
+                <div class="modal-body">
+                    <input type="hidden" id="criterioId" name="Id" />
+                    <div class="form-group">
+                        <label for="criterioNombreEdit" class="font-weight-bold">Nombre del Criterio</label>
+                        <input type="text" id="criterioNombreEdit" name="Nombre" required class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="criterioDescripcionEdit" class="font-weight-bold">Descripción</label>
+                        <textarea id="criterioDescripcionEdit" name="Descripcion" rows="4" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Función para abrir el modal y rellenar los campos con los valores del criterio a editar
+            function abrirModalEditar(id, nombre, descripcion) {
+                console.log("Abrir modal con datos:", id, nombre, descripcion); // Para depuración
+                document.getElementById("criterioId").value = id;
+                document.getElementById("criterioNombreEdit").value = nombre;
+                document.getElementById("criterioDescripcionEdit").value = descripcion;
+
+                // Inicializar y mostrar el modal
+                var myModal = new bootstrap.Modal(document.getElementById('modalEditarCriterio'));
+                myModal.show();
+            }
+
+            // Confirmación de eliminación
+            document.querySelectorAll('.btn-danger').forEach(button => {
+                button.addEventListener('click', function (e) {
+                    if (!confirm("¿Estás seguro de que deseas eliminar este criterio?")) {
+                        e.preventDefault();
+                    }
+                });
+            });
+
+            // Exponer la función globalmente para que funcione con los botones en la tabla
+            window.abrirModalEditar = abrirModalEditar;
+        });
+    </script>
+}

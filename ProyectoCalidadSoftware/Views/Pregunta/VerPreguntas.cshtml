@@ -1,0 +1,133 @@
+﻿@model ProyectoCalidadSoftware.Models.Criterio
+
+<h2 class="text-left text-uppercase">@Model.Nombre</h2>
+
+<table class="table table-bordered table-striped mt-4">
+    <thead class="table-dark">
+        <tr>
+            <th>Pregunta</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody id="preguntasContainer">
+        @if (Model.Preguntas.Any())
+        {
+            @foreach (var pregunta in Model.Preguntas)
+            {
+                <tr id="pregunta-@pregunta.Id">
+                    <td>@pregunta.Texto</td>
+                    <td>
+                        <!-- Botón para editar pregunta -->
+                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editarPreguntaModal" data-id="@pregunta.Id" data-texto="@pregunta.Texto">Editar</button>
+
+                        <!-- Botón para eliminar pregunta -->
+                        <button class="btn btn-danger" onclick="eliminarPregunta(@pregunta.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr id="no-preguntas">
+                <td colspan="3">No hay preguntas asociadas a este criterio.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Botón para agregar pregunta -->
+<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#agregarPreguntaModal">Agregar pregunta</button>
+
+<!-- Modal para editar pregunta -->
+<div class="modal fade" id="editarPreguntaModal" tabindex="-1" role="dialog" aria-labelledby="editarPreguntaModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editarPreguntaModalLabel">Editar Pregunta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editarPreguntaForm" method="post" action="@Url.Action("EditarPregunta", "Pregunta")">
+                    <input type="hidden" id="editarPreguntaId" name="Id" />
+                    <input type="hidden" id="editarCriterioId" name="CriterioId" value="@Model.Id" />
+
+                    <div class="form-group mb-3">
+                        <label for="editarTexto" class="font-weight-bold">Pregunta</label>
+                        <input type="text" class="form-control" id="editarTexto" name="Texto" placeholder="Escribe el texto de la pregunta aquí" />
+                        <span class="text-danger" id="editarTextoError"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para agregar pregunta -->
+<div class="modal fade" id="agregarPreguntaModal" tabindex="-1" role="dialog" aria-labelledby="agregarPreguntaModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="agregarPreguntaModalLabel">Agregar Pregunta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="@Url.Action("CrearPregunta", "Pregunta")">
+                    <input type="hidden" id="agregarCriterioId" name="CriterioId" value="@Model.Id" />
+
+                    <div class="form-group mb-3">
+                        <label for="agregarTexto" class="font-weight-bold">Nueva pregunta</label>
+                        <input type="text" class="form-control" id="agregarTexto" name="Texto" placeholder="Escribe el texto de la pregunta aquí" />
+                        <span class="text-danger" id="agregarTextoError"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="submit" class="btn btn-primary">Guardar Pregunta</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Al abrir el modal de editar, asigna los valores a los campos
+        $('#editarPreguntaModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Botón que activó el modal
+            var preguntaId = button.data('id');
+            var preguntaTexto = button.data('texto');
+            var modal = $(this);
+
+            modal.find('#editarPreguntaId').val(preguntaId);
+            modal.find('#editarTexto').val(preguntaTexto);
+        });
+
+        // Función para eliminar pregunta
+        function eliminarPregunta(id) {
+            if (confirm("¿Estás seguro de que deseas eliminar esta pregunta?")) {
+                fetch(`/Pregunta/EliminarPregunta?id=${id}`, {
+                    method: "POST"
+                }).then(response => {
+                    if (response.ok) {
+                        // Elimina la fila de la tabla
+                        const fila = document.getElementById(`pregunta-${id}`);
+                        if (fila) fila.remove();
+                    } else {
+                        alert("Error al eliminar la pregunta.");
+                    }
+                }).catch(error => {
+                    console.error("Error al eliminar la pregunta:", error);
+                    alert("Error al eliminar la pregunta.");
+                });
+            }
+        }
+    </script>
+}

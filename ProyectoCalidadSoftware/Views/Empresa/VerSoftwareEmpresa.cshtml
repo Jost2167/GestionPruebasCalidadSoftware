@@ -1,0 +1,187 @@
+﻿@model ProyectoCalidadSoftware.Models.Empresa
+
+<h2>@Model.Nombre</h2>
+
+<p><strong>Teléfono:</strong> @Model.Telefono</p>
+<p><strong>Dirección:</strong> @Model.Direccion</p>
+
+<h4 class="mt-4">SOFTWARE</h4>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var software in Model.Softwares)
+        {
+            <tr>
+                <td>@software.Nombre</td>
+                <td>@software.Descripcion</td>
+                <td>
+                    <a asp-action="DetalleSoftware" asp-controller="Software" asp-route-id="@software.Id" class="btn btn-primary">Pruebas</a>
+                    <button class="btn btn-warning btn-editar"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editarModal"
+                            data-id="@software.Id"
+                            data-nombre="@software.Nombre"
+                            data-descripcion="@software.Descripcion"
+                            data-objetivo-general="@software.ObjetivoGeneral"
+                            data-objetivos-especificos="@software.ObjetivosEspecificos"
+                            data-version="@software.Version">
+                        Editar
+                    </button>
+                    <button class="btn btn-danger btn-eliminar"
+                            data-bs-toggle="modal"
+                            data-bs-target="#eliminarModal"
+                            data-id="@software.Id"
+                            data-nombre="@software.Nombre">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#crearModal">Agregar software</button>
+
+<!-- Modal Crear -->
+<div class="modal fade" id="crearModal" tabindex="-1" aria-labelledby="crearModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="CrearSoftware" asp-controller="Software" method="post">
+                <input type="hidden" name="EmpresaId" value="@Model.Id" />
+                <div class="modal-header">
+                    <h5 class="modal-title" id="crearModalLabel">Crear Software</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="crear-nombre">Nombre</label>
+                        <input type="text" class="form-control" id="crear-nombre" name="Nombre" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="crear-descripcion">Descripción</label>
+                        <textarea class="form-control" id="crear-descripcion" name="Descripcion" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="crear-objetivo-general">Objetivo general</label>
+                        <textarea class="form-control" id="crear-objetivo-general" name="ObjetivoGeneral" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="crear-objetivos-especificos">Objetivos específicos</label>
+                        <textarea class="form-control" id="crear-objetivos-especificos" name="ObjetivosEspecificos" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="crear-version">Versión</label>
+                        <input type="text" class="form-control" id="crear-version" name="Version" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar -->
+<div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="EditarSoftware" asp-controller="Software" method="post">
+                <input type="hidden" id="editar-id" name="Id" />
+                <input type="hidden" name="EmpresaId" value="@Model.Id" />
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editarModalLabel">Editar Software</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="editar-nombre">Nombre</label>
+                        <input type="text" class="form-control" id="editar-nombre" name="Nombre" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="editar-descripcion">Descripción</label>
+                        <textarea class="form-control" id="editar-descripcion" name="Descripcion" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editar-objetivo-general">Objetivo general</label>
+                        <textarea class="form-control" id="editar-objetivo-general" name="ObjetivoGeneral" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editar-objetivos-especificos">Objetivos específicos</label>
+                        <textarea class="form-control" id="editar-objetivos-especificos" name="ObjetivosEspecificos" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editar-version">Versión</label>
+                        <input type="text" class="form-control" id="editar-version" name="Version" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar -->
+<div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="eliminarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="EliminarSoftware" asp-controller="Software" method="post">
+                <input type="hidden" id="eliminar-id" name="Id" />
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eliminarModalLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Está seguro de que desea eliminar el software <strong id="eliminar-nombre"></strong> y todas sus pruebas asociadas?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Configurar modales para editar
+    document.querySelectorAll('.btn-editar').forEach(button => {
+        button.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            const nombre = this.getAttribute('data-nombre');
+            const descripcion = this.getAttribute('data-descripcion');
+            const objetivoGeneral = this.getAttribute('data-objetivo-general');
+            const objetivosEspecificos = this.getAttribute('data-objetivos-especificos');
+            const version = this.getAttribute('data-version');
+
+            document.getElementById('editar-id').value = id;
+            document.getElementById('editar-nombre').value = nombre;
+            document.getElementById('editar-descripcion').value = descripcion;
+            document.getElementById('editar-objetivo-general').value = objetivoGeneral;
+            document.getElementById('editar-objetivos-especificos').value = objetivosEspecificos;
+            document.getElementById('editar-version').value = version;
+        });
+    });
+
+    // Configurar modales para eliminar
+    document.querySelectorAll('.btn-eliminar').forEach(button => {
+        button.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            const nombre = this.getAttribute('data-nombre');
+
+            document.getElementById('eliminar-id').value = id;
+            document.getElementById('eliminar-nombre').textContent = nombre;
+        });
+    });
+</script>

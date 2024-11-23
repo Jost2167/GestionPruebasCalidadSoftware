@@ -1,0 +1,27 @@
+﻿@using System.Security.Claims;
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+@if (User.Identity!.IsAuthenticated)
+{
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="display-4 text-primary font-weight-bold">
+                    Bienvenido, @User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault()
+                </h1>
+                <p class="lead text-muted">
+                    Nos complace darle la bienvenida a nuestra plataforma de evaluación de software. Aquí podrá evaluar distintas aplicaciones basándose en criterios esenciales.
+                </p>
+                <p class="text-muted">
+                    Como usuario registrado, tendrá la oportunidad de calificar softwares a través de varios parámetros clave: Funcionalidad, Fiabilidad, Usabilidad, Eficiencia, Mantenimiento, Portabilidad y Calidad de uso.
+                </p>
+                <div class="alert alert-info mt-4">
+                    <strong>¿Cómo empezar?</strong> Comience evaluando un software o revise evaluaciones anteriores. Si tiene alguna duda, no dude en contactar con el soporte.
+                </div>
+                <a href="@Url.Action("CrearCriterio", "Criterio")" class="btn btn-primary btn-lg">Comenzar Evaluación</a>
+            </div>
+        </div>
+    </div>
+}

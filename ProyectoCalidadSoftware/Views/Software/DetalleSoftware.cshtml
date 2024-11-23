@@ -1,0 +1,61 @@
+﻿@model ProyectoCalidadSoftware.Models.Software
+
+<h2>Detalles del Software: @Model.Nombre</h2>
+
+<div class="card">
+    <div class="card-header">
+        Información General
+    </div>
+    <div class="card-body">
+        <p><strong>Nombre:</strong> @Model.Nombre</p>
+        <p><strong>Descripción:</strong> @Model.Descripcion</p>
+        <p><strong>Objetivo General:</strong> @Model.ObjetivoGeneral</p>
+        <p><strong>Objetivos Específicos:</strong> @Model.ObjetivosEspecificos</p>
+        <p><strong>Versión:</strong> @Model.Version</p>
+        <p><strong>Empresa:</strong> @Model.Empresa.Nombre</p>
+    </div>
+</div>
+
+<h3 class="mt-4">Pruebas Asociadas</h3>
+
+@if (Model.Pruebas.Any())
+{
+    @foreach (var grupo in Model.Pruebas
+      .GroupBy(p => new { p.Fecha.Date, p.Nombre }) // Agrupar por fecha y nombre
+      .OrderBy(g => g.Key.Date)) // Ordenar por fecha
+    {
+        <div class="prueba-group">
+            <h4>@grupo.Key.Nombre - @grupo.Key.Date.ToString("dd/MM/yyyy")</h4>
+            <a asp-controller="Prueba" asp-action="Detalles" asp-route-pruebaId="@grupo.Key.Nombre" class="btn btn-secondary btn-sm ml-3">
+                Detalles
+            </a>
+            <hr /> <!-- Línea de separación -->
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Criterio</th>
+                        <th>Puntaje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var prueba in grupo)
+                    {
+                        <tr>
+                            <td>@prueba.Criterio.Nombre</td>
+                            <td>@prueba.Puntaje</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}
+else
+{
+    <p>No hay pruebas asociadas a este software.</p>
+}
+
+<a asp-controller="Prueba" asp-action="CrearPrueba" asp-route-softwareId="@Model.Id" class="btn btn-primary mt-3">
+    Agregar Nueva Prueba
+</a>

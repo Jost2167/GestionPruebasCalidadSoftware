@@ -1,0 +1,35 @@
+﻿@model IEnumerable<ProyectoCalidadSoftware.Models.Empresa>
+
+<h2>Empresas y sus Softwares</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Empresa</th>
+            <th>Softwares</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var empresa in Model)
+        {
+            <tr>
+                <td>@empresa.Nombre</td>
+                <td>
+                    @if (empresa.Softwares.Any())
+                    {
+                        <ul>
+                            @foreach (var software in empresa.Softwares)
+                            {
+                                <li>@software.Nombre</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <span>No hay softwares asociados</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
