@@ -21,13 +21,14 @@
 @if (Model.Pruebas.Any())
 {
     @foreach (var grupo in Model.Pruebas
-      .GroupBy(p => new { p.Fecha.Date, p.Nombre }) // Agrupar por fecha y nombre
-      .OrderBy(g => g.Key.Date)) // Ordenar por fecha
+       .GroupBy(p => new { p.Fecha.Date, p.Nombre }) // Agrupar por fecha y nombre
+       .OrderBy(g => g.Key.Date)) // Ordenar por fecha
     {
         <div class="prueba-group">
             <h4>@grupo.Key.Nombre - @grupo.Key.Date.ToString("dd/MM/yyyy")</h4>
-            <a asp-controller="Prueba" asp-action="Detalles" asp-route-pruebaId="@grupo.Key.Nombre" class="btn btn-secondary btn-sm ml-3">
-                Detalles
+            <!-- Enlace a la acción Detalles de la prueba -->
+            <a href="@Url.Action("VerPdf", "Prueba", new { fileName = grupo.First().ContenidoImpresion })" class="btn btn-secondary btn-sm ml-3" target="_blank">
+                Ver PDF
             </a>
             <hr /> <!-- Línea de separación -->
 

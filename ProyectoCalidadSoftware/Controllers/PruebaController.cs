@@ -177,5 +177,21 @@ namespace ProyectoCalidadSoftware.Controllers
 
             return contenido;
         }
+
+        public IActionResult VerPdf(string fileName)
+        {
+            // Ruta completa del archivo en el servidor
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "pdfs", fileName);
+
+            // Verifica si el archivo existe
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound();  // Si no se encuentra el archivo, devuelve 404
+            }
+
+            // Devuelve el archivo al cliente
+            return PhysicalFile(filePath, "application/pdf");
+        }
+
     }
 }
