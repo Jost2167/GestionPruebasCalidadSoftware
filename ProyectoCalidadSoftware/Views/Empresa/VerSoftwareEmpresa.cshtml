@@ -1,11 +1,19 @@
 ﻿@model ProyectoCalidadSoftware.Models.Empresa
 
-<h2>@Model.Nombre</h2>
+<h2><strong>@Model.Nombre.ToUpper()</strong></h2>
 
-<p><strong>Teléfono:</strong> @Model.Telefono</p>
-<p><strong>Dirección:</strong> @Model.Direccion</p>
+<div class="card shadow-sm mt-4">
+    <div class="card-header text-white bg-primary">
+        <h4 class="mb-0 text-white">INFORMACIÓN DE CONTACTO</h4>
+    </div>
+    <div class="card-body">
+        <p><strong>Descripción:</strong> @Model.Descripcion</p>
+        <p><strong>Teléfono:</strong> @Model.Telefono</p>
+        <p><strong>Dirección:</strong> @Model.Direccion</p>
+    </div>
+</div>
 
-<h4 class="mt-4">SOFTWARE</h4>
+<h3 class="mt-4">SOFTWARE</h3>
 
 <table class="table table-bordered table-striped">
     <thead class="table-dark">
@@ -22,7 +30,7 @@
                 <td>@software.Nombre</td>
                 <td>@software.Descripcion</td>
                 <td>
-                    <a asp-action="DetalleSoftware" asp-controller="Software" asp-route-id="@software.Id" class="btn btn-primary">Pruebas</a>
+                    <a asp-action="DetalleSoftware" asp-controller="Software" asp-route-id="@software.Id" class="btn btn-success">Pruebas</a>
                     <button class="btn btn-warning btn-editar"
                             data-bs-toggle="modal"
                             data-bs-target="#editarModal"
@@ -47,7 +55,7 @@
     </tbody>
 </table>
 
-<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#crearModal">Agregar software</button>
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#crearModal">Agregar software</button>
 
 <!-- Modal Crear -->
 <div class="modal fade" id="crearModal" tabindex="-1" aria-labelledby="crearModalLabel" aria-hidden="true">

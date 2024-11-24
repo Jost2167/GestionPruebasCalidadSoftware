@@ -7,7 +7,7 @@ using ProyectoCalidadSoftware.Models;
 namespace ProyectoCalidadSoftware.Controllers
 {
 
-    [Authorize(Roles ="Administrador")]
+    [Authorize(Roles = "Administrador")]
     public class PreguntaController : Controller
     {
         private readonly AppDBContext _appDBContext;

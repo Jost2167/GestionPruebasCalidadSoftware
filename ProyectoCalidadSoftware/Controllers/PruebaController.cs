@@ -59,7 +59,7 @@ namespace ProyectoCalidadSoftware.Controllers
                     CriterioId = criterioId,
                     SoftwareId = softwareId,
                     Nombre = nombrePrueba,
-                    Puntaje = (int)Math.Round(promedioPuntaje),
+                    Puntaje = (float)promedioPuntaje,
                     Fecha = DateTime.Now
                 };
 

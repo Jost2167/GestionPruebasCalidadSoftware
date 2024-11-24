@@ -5,23 +5,76 @@
 
 @if (User.Identity!.IsAuthenticated)
 {
-    <div class="container py-5">
-        <div class="row">
-            <div class="col-12 text-center">
-                <h1 class="display-4 text-primary font-weight-bold">
-                    Bienvenido, @User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault()
-                </h1>
-                <p class="lead text-muted">
-                    Nos complace darle la bienvenida a nuestra plataforma de evaluación de software. Aquí podrá evaluar distintas aplicaciones basándose en criterios esenciales.
-                </p>
-                <p class="text-muted">
-                    Como usuario registrado, tendrá la oportunidad de calificar softwares a través de varios parámetros clave: Funcionalidad, Fiabilidad, Usabilidad, Eficiencia, Mantenimiento, Portabilidad y Calidad de uso.
-                </p>
-                <div class="alert alert-info mt-4">
-                    <strong>¿Cómo empezar?</strong> Comience evaluando un software o revise evaluaciones anteriores. Si tiene alguna duda, no dude en contactar con el soporte.
+    @if (User.IsInRole("Administrador"))
+    {
+        <!-- Si el usuario es administrador -->
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-8 text-center">
+                    <!-- Título de bienvenida -->
+                    <h1 class="display-4 text-success font-weight-bold mb-3">
+                        ¡Bienvenido, <strong>@User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault()!</strong>
+                    </h1>
+                    <p class="lead text-muted mb-4">
+                        Como administrador de la plataforma, tienes acceso completo para gestionar y definir los criterios y preguntas que se utilizarán para evaluar los diferentes softwares en nuestra plataforma.
+                    </p>
+
+                    <!-- Descripción de las responsabilidades -->
+                    <p class="text-muted mb-4">
+                        Tus principales responsabilidades incluyen crear, modificar y eliminar los criterios de evaluación y las preguntas asociadas. Este es un paso clave para garantizar que las pruebas sean consistentes y reflejen adecuadamente las necesidades de evaluación.
+                    </p>
+
+                    <!-- Instrucciones para administradores -->
+                    <div class="alert alert-info mt-4">
+                        <strong>Para comenzar:</strong> Dirígete a la sección de gestión de criterios, donde podrás agregar o actualizar los criterios de evaluación y asignarles preguntas específicas que los usuarios deberán responder durante la evaluación del software.
+                    </div>
+
+                    <!-- Botón para acceder a la gestión -->
+                    <div class="mt-4">
+                        <a href="@Url.Action("VerCriterios", "Criterio")" class="btn btn-success">
+                            ¡Empieza a crear tus criterios de evaluación!
+                        </a>
+                    </div>
                 </div>
-                <a href="@Url.Action("CrearCriterio", "Criterio")" class="btn btn-primary btn-lg">Comenzar Evaluación</a>
             </div>
         </div>
-    </div>
+    }
+    else
+    {
+        <!-- Si el usuario es un usuario regular -->
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-8 text-center">
+                    <!-- Título de bienvenida -->
+                    <h1 class="display-4 text-primary font-weight-bold mb-3">
+                        ¡Bienvenido, <strong>@User.Claims.Where(c => c.Type == ClaimTypes.Name).Select(c => c.Value).SingleOrDefault()!</strong>
+                    </h1>
+                    <p class="lead text-muted mb-4">
+                        Nos complace darle la bienvenida a nuestra plataforma de evaluación de software.
+                    </p>
+
+                    <!-- Descripción de la plataforma -->
+                    <p class="text-muted mb-4">
+                        Como usuario registrado, tendrá la oportunidad de calificar software a través de varios parámetros clave:
+                        <strong>Funcionalidad</strong>, <strong>Fiabilidad</strong>, <strong>Usabilidad</strong>,
+                        <strong>Eficiencia</strong>, <strong>Mantenimiento</strong>, <strong>Portabilidad</strong> y
+                        <strong>Calidad de uso</strong>. Cada evaluación contribuye a una visión más completa de las aplicaciones que utilizará.
+                    </p>
+
+                    <!-- Instrucciones para comenzar -->
+                    <div class="alert alert-info mt-4">
+                        <strong>Para realizar una evaluación:</strong> Antes de comenzar a calificar un software, deberá crear una empresa, agregar un software a evaluar y responder los criterios y preguntas propuestas por el administrador.
+                        Estos pasos son esenciales para poder evaluar correctamente las aplicaciones en nuestra plataforma.
+                    </div>
+
+                    <!-- Botón para comenzar evaluación -->
+                    <div class="mt-4">
+                        <a href="@Url.Action("VerEmpresas", "Empresa")" class="btn btn-primary">
+                            ¡Comenzar prueba!
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 }

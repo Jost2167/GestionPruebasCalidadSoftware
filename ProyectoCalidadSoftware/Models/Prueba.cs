@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
-        public int Puntaje { get; set; }
+        public float Puntaje { get; set; }
 
         public string ContenidoImpresion { get; set; }
 

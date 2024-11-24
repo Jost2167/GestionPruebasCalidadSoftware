@@ -1,11 +1,11 @@
 ﻿@model ProyectoCalidadSoftware.Models.Software
 
-<div class="container mt-4">
-    <h2 class="text-left">@Model.Nombre</h2>
+
+    <h2 class="text-left"><strong>@Model.Nombre.ToUpper()</strong></h2>
 
     <div class="card shadow-sm mt-4">
-        <div class="card-header text-white bg-dark">
-            <h4 class="mb-0 text-white">Información General</h4>
+        <div class="card-header text-white bg-primary">
+            <h4 class="mb-0 text-white">INFORMACIÓN GENERAL</h4>
         </div>
         <div class="card-body">
             <p><strong>Objetivo General:</strong> @Model.ObjetivoGeneral</p>
@@ -15,7 +15,7 @@
         </div>
     </div>
 
-    <h3 class="mt-5">Interpretación de Puntajes</h3>
+    <h3 class="mt-4">INTERPRETACIÓN DE PUNTAJES</h3>
     <div class="table-responsive">
         <table class="table table-bordered table-hover">
             <thead class="table-light">
@@ -65,14 +65,14 @@
         </table>
     </div>
 
-    <h3 class="mt-5">Pruebas Asociadas</h3>
+    <h3 class="mt-4">PRUEBAS ASOCIADAS</h3>
     @if (Model.Pruebas.Any())
     {
         @foreach (var grupo in Model.Pruebas
        .GroupBy(p => new { p.Fecha.Date, p.Nombre }) // Agrupar por fecha y nombre
        .OrderBy(g => g.Key.Date)) // Ordenar por fecha
         {
-            <div class="card mt-4 shadow-sm">
+            <div class="card shadow-sm">
                 <div class="card-header bg-secondary text-white">
                     <h5 class="mb-0 d-flex justify-content-between align-items-center">
                         <span>@grupo.Key.Nombre - @grupo.Key.Date.ToString("dd/MM/yyyy")</span>
@@ -97,23 +97,25 @@
                                     <td>@prueba.Criterio.Nombre</td>
                                     <td>@prueba.Puntaje / 5</td>
                                     <td>
-                                        @switch (prueba.Puntaje)
+                                        @if (prueba.Puntaje >= 0 && prueba.Puntaje < 1.5)
                                         {
-                                            case 1:
-                                                <button class="btn btn-danger btn-sm w-100 text-truncate">Insuficiente</button>
-                                                ; break;
-                                            case 2:
-                                                <button class="btn btn-warning btn-sm w-100 text-truncate">Bajo</button>
-                                                ; break;
-                                            case 3:
-                                                <button class="btn btn-secondary btn-sm w-100 text-truncate">Aceptable</button>
-                                                ; break;
-                                            case 4:
-                                                <button class="btn btn-info btn-sm w-100 text-truncate">Bueno</button>
-                                                ; break;
-                                            case 5:
-                                                <button class="btn btn-success btn-sm w-100 text-truncate">Excelente</button>
-                                                ; break;
+                                            <button class="btn btn-danger btn-sm w-100 text-truncate">Insuficiente</button>
+                                        }
+                                        else if (prueba.Puntaje >= 1.5 && prueba.Puntaje < 2.5)
+                                        {
+                                            <button class="btn btn-warning btn-sm w-100 text-truncate">Bajo</button>
+                                        }
+                                        else if (prueba.Puntaje >= 2.5 && prueba.Puntaje < 3.5)
+                                        {
+                                            <button class="btn btn-secondary btn-sm w-100 text-truncate">Aceptable</button>
+                                        }
+                                        else if (prueba.Puntaje >= 3.5 && prueba.Puntaje < 4.5)
+                                        {
+                                            <button class="btn btn-info btn-sm w-100 text-truncate">Bueno</button>
+                                        }
+                                        else if (prueba.Puntaje >= 4.5)
+                                        {
+                                            <button class="btn btn-success btn-sm w-100 text-truncate">Excelente</button>
                                         }
                                     </td>
                                 </tr>
@@ -131,7 +133,7 @@
         </div>
     }
 
-    <a asp-controller="Prueba" asp-action="CrearPrueba" asp-route-softwareId="@Model.Id" class="btn btn-success mt-4">
+    <a asp-controller="Prueba" asp-action="CrearPrueba" asp-route-softwareId="@Model.Id" class="btn btn-primary mt-4">
         Agregar prueba
     </a>
-</div>
+

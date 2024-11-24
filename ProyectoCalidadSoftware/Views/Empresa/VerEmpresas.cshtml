@@ -1,6 +1,6 @@
 ﻿@model List<ProyectoCalidadSoftware.Models.Empresa>
 
-<h2>EMPRESAS</h2>
+<h2><strong>EMPRESAS</strong></h2>
 
 <table class="table table-bordered table-striped mt-4">
     <thead class="table-dark">
@@ -17,7 +17,7 @@
                 <td>@empresa.Nombre</td>
                 <td>@empresa.Descripcion</td>
                 <td>
-                    <a asp-action="VerSoftwareEmpresa" asp-route-id="@empresa.Id" class="btn btn-primary ">Detalles</a> 
+                    <a asp-action="VerSoftwareEmpresa" asp-route-id="@empresa.Id" class="btn btn-success ">Software</a> 
                     <button class="btn btn-warning btn-editar" 
                             data-bs-toggle="modal" 
                             data-bs-target="#editarModal" 
@@ -41,7 +41,7 @@
     </tbody>
 </table>
 
-<a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#crearModal">Agregar empresa</a>
+<a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#crearModal">Agregar empresa</a>
 
 <!-- Modal Crear -->
 <div class="modal fade" id="crearModal" tabindex="-1" aria-labelledby="crearModalLabel" aria-hidden="true">

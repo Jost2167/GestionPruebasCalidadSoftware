@@ -1,6 +1,6 @@
 ﻿@model List<ProyectoCalidadSoftware.Models.Criterio>
 
-<h2 class="text-left">CRITERIOS</h2>
+<h2 class="text-left"><strong>CRITERIOS</strong></h2>
 
 <table class="table table-bordered table-striped mt-4">
     <thead class="table-dark">
@@ -18,13 +18,22 @@
                 <td>@criterio.Descripcion</td>
                 <td>
                     <!-- Botón para ver preguntas del criterio -->
-                    <a href="@Url.Action("VerPreguntas", "Pregunta", new { criterioId = criterio.Id })" class="btn btn-primary">Preguntas</a>
+                    <a href="@Url.Action("VerPreguntas", "Pregunta", new { criterioId = criterio.Id })" class="btn btn-success">Preguntas</a>
 
                     <!-- Botón para editar el criterio -->
-                    <button class="btn btn-warning" onclick="abrirModalEditar(@criterio.Id, '@criterio.Nombre', '@criterio.Descripcion')">Editar</button>
+                    <button class="btn btn-warning btn-edit"
+                            data-id="@criterio.Id"
+                            data-nombre="@criterio.Nombre"
+                            data-descripcion="@criterio.Descripcion">
+                        Editar
+                    </button>
 
                     <!-- Botón para eliminar criterio -->
-                    <a href="@Url.Action("EliminarCriterio", "Criterio", new { id = criterio.Id })" class="btn btn-danger">Eliminar</a>
+                    <button class="btn btn-danger"
+                            data-id="@criterio.Id"
+                            data-nombre="@criterio.Nombre">
+                        Eliminar
+                    </button>
                 </td>
             </tr>
         }
@@ -32,7 +41,7 @@
 </table>
 
 <!-- Botón para crear un nuevo criterio -->
-<a href="@Url.Action("CrearCriterio", "Criterio")" class="btn btn-success">Agregar criterio</a>
+<a href="@Url.Action("CrearCriterio", "Criterio")" class="btn btn-primary">Agregar criterio</a>
 
 <!-- Modal para editar nombre y descripción del criterio -->
 <div class="modal fade" id="modalEditarCriterio" tabindex="-1" aria-labelledby="modalEditarCriterioLabel" aria-hidden="true">
@@ -63,32 +72,64 @@
     </div>
 </div>
 
+<!-- Modal para confirmar eliminación -->
+<div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="eliminarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="EliminarCriterio" method="post">
+                <input type="hidden" id="eliminar-id" name="Id" />
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eliminarModalLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Está seguro de que desea eliminar el criterio <strong id="eliminar-nombre"></strong>?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Función para abrir el modal y rellenar los campos con los valores del criterio a editar
-            function abrirModalEditar(id, nombre, descripcion) {
-                console.log("Abrir modal con datos:", id, nombre, descripcion); // Para depuración
-                document.getElementById("criterioId").value = id;
-                document.getElementById("criterioNombreEdit").value = nombre;
-                document.getElementById("criterioDescripcionEdit").value = descripcion;
+            // Función para abrir el modal de edición
+            document.querySelectorAll('.btn-edit').forEach(button => {
+                button.addEventListener('click', function () {
+                    const id = this.getAttribute('data-id');
+                    const nombre = this.getAttribute('data-nombre');
+                    const descripcion = this.getAttribute('data-descripcion');
 
-                // Inicializar y mostrar el modal
-                var myModal = new bootstrap.Modal(document.getElementById('modalEditarCriterio'));
-                myModal.show();
-            }
+                    // Rellenar los campos del modal
+                    document.getElementById("criterioId").value = id;
+                    document.getElementById("criterioNombreEdit").value = nombre;
+                    document.getElementById("criterioDescripcionEdit").value = descripcion;
 
-            // Confirmación de eliminación
-            document.querySelectorAll('.btn-danger').forEach(button => {
-                button.addEventListener('click', function (e) {
-                    if (!confirm("¿Estás seguro de que deseas eliminar este criterio?")) {
-                        e.preventDefault();
-                    }
+                    // Mostrar el modal
+                    const modalEditar = new bootstrap.Modal(document.getElementById('modalEditarCriterio'));
+                    modalEditar.show();
                 });
             });
 
-            // Exponer la función globalmente para que funcione con los botones en la tabla
-            window.abrirModalEditar = abrirModalEditar;
+            // Función para abrir el modal de confirmación de eliminación
+            document.querySelectorAll('.btn-danger').forEach(button => {
+                button.addEventListener('click', function () {
+                    const id = this.getAttribute('data-id');
+                    const nombre = this.getAttribute('data-nombre');
+
+                    // Rellenar los campos del modal
+                    document.getElementById("eliminar-id").value = id;
+                    document.getElementById("eliminar-nombre").textContent = nombre;
+
+                    // Mostrar el modal
+                    const modalEliminar = new bootstrap.Modal(document.getElementById('eliminarModal'));
+                    modalEliminar.show();
+                });
+            });
         });
     </script>
 }

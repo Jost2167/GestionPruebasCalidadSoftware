@@ -27,9 +27,6 @@ namespace ProyectoCalidadSoftware.Data
                 tb.Property(col => col.Id)
                     .UseIdentityColumn()
                     .ValueGeneratedOnAdd();
-
-                tb.Property(col => col.Nombre).HasMaxLength(50);
-                tb.Property(col => col.Clave).HasMaxLength(50);
             });
 
             modelBuilder.Entity<Usuario>().ToTable("Usuario");
@@ -38,12 +35,6 @@ namespace ProyectoCalidadSoftware.Data
             modelBuilder.Entity<Criterio>(tb =>
             {
                 tb.HasKey(col => col.Id);
-                tb.Property(col => col.Nombre)
-                    .IsRequired()
-                    .HasMaxLength(100);
-                tb.Property(col => col.Descripcion)
-                    .IsRequired()
-                    .HasMaxLength(200);
 
                 // Relación uno-a-muchos con Pregunta
                 tb.HasMany(col => col.Preguntas)
@@ -58,9 +49,6 @@ namespace ProyectoCalidadSoftware.Data
             modelBuilder.Entity<Pregunta>(tb =>
             {
                 tb.HasKey(col => col.Id);
-                tb.Property(col => col.Texto)
-                    .IsRequired()
-                    .HasMaxLength(200);
             });
 
             modelBuilder.Entity<Pregunta>().ToTable("Pregunta");
@@ -68,18 +56,6 @@ namespace ProyectoCalidadSoftware.Data
             modelBuilder.Entity<Empresa>(tb =>
             {
                 tb.HasKey(col => col.Id);
-                tb.Property(col => col.Telefono)
-                    .HasMaxLength(10)
-                    .IsRequired();
-                tb.Property(col => col.Nombre)
-                    .HasMaxLength(50)
-                    .IsRequired();
-                tb.Property(col => col.Direccion)
-                    .HasMaxLength(50)
-                    .IsRequired();
-                tb.Property(col => col.Descripcion)
-                    .HasMaxLength(250)
-                    .IsRequired();
 
                 tb.HasMany(e => e.Softwares)
                 .WithOne(s=>s.Empresa)
